@@ -1,0 +1,12 @@
+node_modules/
+dist/
+out/
+.env
+.env.local
+*.log
+.DS_Store
+
+# Material fuente recibido; los fixtures se versionan en fixtures/.
+/PRD-03-agente-ordenes-compra-sap 2.md
+/perxia4developers-v2.html
+/reto-03 1/
