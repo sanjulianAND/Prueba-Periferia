@@ -10,13 +10,14 @@
     "dev": "concurrently -k -n API,WEB -c green,cyan \"npm:dev:server\" \"npm:dev:web\"",
     "dev:server": "tsx watch src/server.ts",
     "dev:web": "vite --config web/vite.config.ts",
+    "demo": "tsx demo.ts",
     "build": "npm run build:server && npm run build:web",
     "build:server": "tsc -p tsconfig.server.json",
     "build:web": "vite build --config web/vite.config.ts",
     "start": "node dist/server/src/server.js",
-    "typecheck": "tsc -p tsconfig.server.json --noEmit && tsc -p tsconfig.web.json --noEmit",
-    "test": "tsx --test src/app.test.ts",
-    "test:watch": "tsx --test --watch src/app.test.ts",
+    "typecheck": "tsc -p tsconfig.server.json --noEmit && tsc -p tsconfig.test.json --noEmit && tsc -p tsconfig.web.json --noEmit",
+    "test": "tsx --test src/app.test.ts src/app.integration.test.ts src/agent/tool-loop-agent.test.ts src/agent/purchase-agent.test.ts src/agent/llm-purchase-agent.test.ts src/domain/purchase-orders.test.ts src/llm/anthropic.test.ts src/tools/oc.test.ts",
+    "test:watch": "tsx --test --watch src/app.test.ts src/app.integration.test.ts src/agent/tool-loop-agent.test.ts src/agent/purchase-agent.test.ts src/agent/llm-purchase-agent.test.ts src/domain/purchase-orders.test.ts src/llm/anthropic.test.ts src/tools/oc.test.ts",
     "lint": "eslint ."
   },
   "dependencies": {

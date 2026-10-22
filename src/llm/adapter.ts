@@ -1,6 +1,28 @@
-export interface AgentMessage {
-  role: "system" | "user" | "assistant" | "tool";
+export interface TextContentBlock {
+  type: "text";
+  text: string;
+}
+
+export interface ToolUseContentBlock {
+  type: "tool_use";
+  id: string;
+  name: string;
+  input: unknown;
+}
+
+export interface ToolResultContentBlock {
+  type: "tool_result";
+  toolUseId: string;
   content: string;
+  isError?: boolean;
+}
+
+export type AssistantContentBlock = TextContentBlock | ToolUseContentBlock;
+export type AgentContentBlock = AssistantContentBlock | ToolResultContentBlock;
+
+export interface AgentMessage {
+  role: "user" | "assistant";
+  content: string | AgentContentBlock[];
 }
 
 export interface ToolDefinition {
@@ -9,12 +31,32 @@ export interface ToolDefinition {
   inputSchema: Record<string, unknown>;
 }
 
+export interface LlmUsage {
+  inputTokens: number;
+  outputTokens: number;
+  totalTokens: number;
+}
+
+export interface LlmRequest {
+  systemPrompt: string;
+  messages: AgentMessage[];
+  tools: ToolDefinition[];
+}
+
+export type LlmStopReason =
+  | "end_turn"
+  | "tool_use"
+  | "max_tokens"
+  | "stop_sequence"
+  | "pause_turn"
+  | "refusal";
+
 export interface LlmResponse {
-  text: string;
-  toolCalls: Array<{ id: string; name: string; arguments: unknown }>;
-  stopReason: "end_turn" | "tool_use" | "max_tokens";
+  content: AssistantContentBlock[];
+  stopReason: LlmStopReason;
+  usage: LlmUsage;
 }
 
 export interface LlmAdapter {
-  enviar(messages: AgentMessage[], tools: ToolDefinition[]): Promise<LlmResponse>;
+  enviar(request: LlmRequest): Promise<LlmResponse>;
 }

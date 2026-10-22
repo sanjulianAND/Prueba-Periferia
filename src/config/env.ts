@@ -7,6 +7,7 @@ const envSchema = z.object({
   LLM_PROVIDER: z.string().min(1).default("anthropic"),
   LLM_MODEL: z.string().min(1).default("claude-sonnet-4-5"),
   ANTHROPIC_API_KEY: z.string().optional(),
+  CORS_ORIGIN: z.string().default("http://localhost:5173"),
   MAX_AGENT_ITERATIONS: z.coerce.number().int().positive().max(50).default(25),
   MAX_SESSION_TOKENS: z.coerce.number().int().positive().default(50_000),
 });

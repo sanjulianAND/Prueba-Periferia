@@ -3,11 +3,21 @@ import { describe, it } from "node:test";
 
 import request from "supertest";
 
+import type { PurchaseAgent } from "./agent/purchase-agent.js";
 import { createApp } from "./app.js";
 import { loadConfig } from "./config/env.js";
 
 const config = loadConfig({ NODE_ENV: "test" });
-const app = createApp({ config });
+const fakeAgent: PurchaseAgent = {
+  async run() {
+    return {
+      reply: "Solicitud procesada por el agente de prueba",
+      toolCalls: [],
+      needsConfirmation: false,
+    };
+  },
+};
+const app = createApp({ config, agent: fakeAgent });
 
 describe("API inicial", () => {
   it("publica el estado sin revelar secretos", async () => {
@@ -17,6 +27,7 @@ describe("API inicial", () => {
       ok: true,
       provider: "anthropic",
       model: "claude-sonnet-4-5",
+      llmConfigured: false,
     });
     assert.equal(JSON.stringify(response.body).includes("API_KEY"), false);
   });

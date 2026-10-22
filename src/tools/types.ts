@@ -16,3 +16,7 @@ export interface ToolResult<T> {
   data?: T;
   error?: string;
 }
+
+export type SuccessfulToolResult<T> = { ok: true; data: T };
+export type FailedToolResult = { ok: false; error: string };
+export type StrictToolResult<T> = SuccessfulToolResult<T> | FailedToolResult;
